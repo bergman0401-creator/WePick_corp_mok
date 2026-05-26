@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>비밀라운지</title>
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --vh: 100dvh;
+      --bg: #f4f5f7;
+      --surface: #ffffff;
+      --surface-soft: #f6f7fa;
+      --line: #e6e8ee;
+      --text: #16181d;
+      --muted: #7a8190;
+      --primary: #2f6df6;
+      --primary-soft: #edf3ff;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      min-height: var(--vh);
+    }
+
+    .page {
+      min-height: 100vh;
+      min-height: 100dvh;
+      min-height: var(--vh);
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+      padding: calc(10px + var(--safe-top)) calc(16px + var(--safe-right)) 12px calc(16px + var(--safe-left));
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .status-icons {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #2f6df6, #78a1ff);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 15px;
+      flex: 0 0 auto;
+    }
+
+    .brand-text h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.15;
+    }
+
+    .brand-text p {
+      margin: 2px 0 0;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .ghost-btn {
+      min-width: 44px;
+      height: 44px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--surface-soft);
+      color: #3b414d;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 14px calc(16px + var(--safe-right)) calc(24px + var(--safe-bottom)) calc(16px + var(--safe-left));
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .notice {
+      background: #eef4ff;
+      color: #2a5ed0;
+      border: 1px solid #dbe7ff;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .composer,
+    .post {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 15px;
+    }
+
+    .composer-head,
+    .post-head,
+    .post-meta-row,
+    .composer-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .anon-box,
+    .post-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .anon-icon,
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: white;
+    }
+
+    .anon-icon { background: #101216; }
+    .avatar { background: linear-gradient(180deg, #20242c, #545c69); }
+
+    .anon-text strong,
+    .post-user strong {
+      display: block;
+      font-size: 14px;
+      line-height: 1.2;
+    }
+
+    .anon-text span,
+    .post-user span,
+    .muted,
+    .post-head small {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .toggle {
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 132px;
+      border: 0;
+      background: transparent;
+      outline: none;
+      resize: none;
+      color: var(--text);
+      font: inherit;
+      font-size: 16px;
+      line-height: 1.55;
+      padding: 12px 0 6px;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    textarea::placeholder { color: #9aa2af; }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #f3f5f8;
+      color: #556070;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .submit {
+      min-width: 98px;
+      min-height: 44px;
+      border: 0;
+      border-radius: 13px;
+      background: var(--primary);
+      color: white;
+      padding: 11px 16px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .section-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2px 4px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .post {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .post h2 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.35;
+      word-break: keep-all;
+    }
+
+    .post p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #323845;
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      color: #6b7280;
+      font-size: 12px;
+      font-weight: 700;
+      padding-top: 2px;
+    }
+
+    .submit:active,
+    .ghost-btn:active { transform: scale(0.98); }
+
+    @media (max-width: 360px) {
+      .composer-foot {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .submit { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="status-row">
+        <span>9:41</span>
+        <div class="status-icons"><span>5G</span><span>◔</span><span>88%</span></div>
+      </div>
+      <div class="brand-row">
+        <div class="brand-wrap">
+          <div class="logo">B</div>
+          <div class="brand-text">
+            <h1>비밀라운지</h1>
+            <p>사내 익명 커뮤니티</p>
+          </div>
+        </div>
+        <button class="ghost-btn" aria-label="알림">🔔</button>
+      </div>
+    </header>
+
+    <section class="content">
+      <div class="notice">익명 기능이 적용된 게시판입니다. 작성자는 공개되지 않습니다.</div>
+
+      <section class="composer" aria-label="익명 글 작성">
+        <div class="composer-head">
+          <div class="anon-box">
+            <div class="anon-icon">🙈</div>
+            <div class="anon-text">
+              <strong>익명으로 글쓰기</strong>
+              <span>작성자는 공개되지 않아요</span>
+            </div>
+          </div>
+          <div class="toggle">ON</div>
+        </div>
+
+        <textarea id="postText" placeholder="팀 회식, 인사, 업무 분위기... 지금 떠오른 이야기를 적어보세요.">솔직히 이번 조직개편 공지, 너무 갑작스럽지 않았나요?
+다들 아무렇지 않은 척하지만 분위기 좀 뒤숭숭한 것 같아요.</textarea>
+
+        <div class="composer-foot">
+          <div class="chips">
+            <span class="chip">회사생활</span>
+            <span class="chip">공감</span>
+          </div>
+          <button class="submit" id="submitBtn">익명 등록</button>
+        </div>
+      </section>
+
+      <div class="section-label">
+        <span>실시간 피드</span>
+        <span>최신순</span>
+      </div>
+
+      <article class="post">
+        <div class="post-head">
+          <div class="post-user">
+            <div class="avatar">👤</div>
+            <div>
+              <strong>익명 247</strong>
+              <span>마케팅팀 · 8분 전</span>
+            </div>
+          </div>
+          <small>•••</small>
+        </div>
+        <h2>다들 금요일 재택 다시 열어주면 좋겠다는 말 안 하나요?</h2>
+        <p>회의 효율은 그대로인데 출근만 늘어난 느낌이에요. 윗선이 체감할 데이터가 부족한 건지 궁금합니다.</p>
+        <div class="stats"><span>♥ 18</span><span>💬 9</span><span>↗ 공유</span></div>
+      </article>
+
+      <article class="post">
+        <div class="post-head">
+          <div class="post-user">
+            <div class="avatar" style="background:linear-gradient(180deg,#434b59,#667085);">🕶</div>
+            <div>
+              <strong>익명 103</strong>
+              <span>개발본부 · 21분 전</span>
+            </div>
+          </div>
+          <small>•••</small>
+        </div>
+        <h2>점심시간 1시간 30분 제도, 시범 도입 어때요</h2>
+        <p>대신 집중근무로 맞추면 업무 만족도 꽤 올라갈 것 같은데요. 사소한 제도 하나가 분위기를 많이 바꾸는 듯.</p>
+        <div class="stats"><span>♥ 32</span><span>💬 14</span><span>📌 저장</span></div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const root = document.documentElement;
+    const postText = document.getElementById('postText');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function setViewportHeight() {
+      root.style.setProperty('--vh', `${window.innerHeight}px`);
+    }
+
+    function autoGrow(el) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, window.innerHeight * 0.34) + 'px';
+    }
+
+    setViewportHeight();
+    autoGrow(postText);
+
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', setViewportHeight);
+    postText.addEventListener('input', () => autoGrow(postText));
+    postText.addEventListener('focus', () => setTimeout(() => { setViewportHeight(); autoGrow(postText); }, 120));
+    postText.addEventListener('blur', () => setTimeout(setViewportHeight, 120));
+
+    submitBtn.addEventListener('click', () => {
+      submitBtn.textContent = '등록 완료';
+      submitBtn.style.background = '#1f57d7';
+      postText.blur();
+    });
+  </script>
+</body>
+</html>
